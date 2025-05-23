@@ -4,10 +4,13 @@ import connectDB from '../config/db';
 import path from 'path';
 import config from '../config/config';
 import { errorHandler } from './middleware/errorHandler';
+import { seedRoles } from '../config/jobRoles';
 
 // Connect to database
 connectDB();
 
+// Seed job roles if they don't exist
+seedRoles();
 // Initialize Express app
 const app: Express = express();
 const PORT = config.port;
@@ -22,9 +25,11 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Import routes
 import jobRoutes from './routes/jobs';
+import roleRoutes from './routes/roles';
 
 // Use routes
 app.use('/api/jobs', jobRoutes);
+app.use('/api/roles', roleRoutes);
 
 // Basic route
 app.get('/', (_req: Request, res: Response) => {

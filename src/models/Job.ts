@@ -1,80 +1,35 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
 
-// Define job status type
-export type JobStatus = "Applied" | "Interview" | "Offer" | "Rejected" | "Saved";
-
-// Define contact info interface
-interface IContactInfo {
-  name?: string;
-  email?: string;
-  phone?: string;
-}
-
-// Define job interface
 export interface IJob extends Document {
+  user: mongoose.Types.ObjectId;
   company: string;
-  position: string;
-  location?: string;
-  status: JobStatus;
-  applicationDate: Date;
-  notes?: string;
-  url?: string;
-  contactInfo?: IContactInfo;
-  salary?: string;
-  reminderDate?: Date;
-  createdAt: Date;
-  updatedAt: Date;
+  role: string;
+  location: string;
+  isRemote: boolean;
+  status: 'Applied' | 'Interview' | 'Offer' | 'Rejected';
+  tags: string[];
+  notes: string;
 }
 
-const JobSchema = new Schema<IJob>(
+const JobSchema: Schema = new Schema<IJob>(
   {
-    company: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    position: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    company: { type: String, required: true },
+    role: { type: String, required: true },
     location: {
-      type: String,
-      trim: true,
+      country: { type: String }, // ISO code or full name
+      state: { type: String },
+      city: { type: String },
     },
+    isRemote: { type: Boolean, default: false },
     status: {
       type: String,
-      enum: ["Applied", "Interview", "Offer", "Rejected", "Saved"],
-      default: "Applied",
+      enum: ['Applied', 'Interview', 'Offer', 'Rejected'],
+      default: 'Applied',
     },
-    applicationDate: {
-      type: Date,
-      default: Date.now,
-    },
-    notes: {
-      type: String,
-      trim: true,
-    },
-    url: {
-      type: String,
-      trim: true,
-    },
-    contactInfo: {
-      name: String,
-      email: String,
-      phone: String,
-    },
-    salary: {
-      type: String,
-      trim: true,
-    },
-    reminderDate: {
-      type: Date,
-    },
+    notes: String,
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-export default mongoose.model<IJob>("Job", JobSchema);
+export default mongoose.model<IJob>('Job', JobSchema);
