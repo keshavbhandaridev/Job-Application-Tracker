@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
-import * as jobController from '../controllers/jobController';
-import { validateJobInput } from '../middleware/validateJob';
+import * as jobController from '../../controllers/jobController';
+import { validateJobInput } from '../../middleware/validateJob';
 
 const router: Router = express.Router();
 
@@ -14,7 +14,7 @@ router.get('/:id', jobController.getJob);
 router.post('/', validateJobInput, jobController.createJob);
 
 // PUT update a job
-router.put('/:id', validateJobInput, jobController.updateJob);
+router.put('/:id', jobController.updateJob);
 
 // DELETE a job
 router.delete('/:id', jobController.deleteJob);

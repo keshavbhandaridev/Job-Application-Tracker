@@ -6,11 +6,15 @@ import config from '../config/config';
 import { errorHandler } from './middleware/errorHandler';
 import { seedRoles } from '../config/jobRoles';
 
+// Import API versions
+import v1Routes from './routes/v1';
+
 // Connect to database
 connectDB();
 
 // Seed job roles if they don't exist
 seedRoles();
+
 // Initialize Express app
 const app: Express = express();
 const PORT = config.port;
@@ -23,13 +27,8 @@ app.use(express.urlencoded({ extended: true }));
 // Static folder
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Import routes
-import jobRoutes from './routes/jobs';
-import roleRoutes from './routes/roles';
-
-// Use routes
-app.use('/api/jobs', jobRoutes);
-app.use('/api/roles', roleRoutes);
+// API Routes - Version 1
+app.use('/api/v1', v1Routes);
 
 // Basic route
 app.get('/', (_req: Request, res: Response) => {
