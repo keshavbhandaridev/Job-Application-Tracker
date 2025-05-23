@@ -1,22 +1,21 @@
 import express, { Router } from 'express';
 import * as jobController from '../../controllers/jobController';
 import { validateJobInput } from '../../middleware/validateJob';
+import { protect } from '../../middleware/authMiddleware';
 
 const router: Router = express.Router();
 
-// GET all jobs
+// Protect all routes with authentication middleware
+router.use(protect);
+
 router.get('/', jobController.getJobs);
 
-// GET a single job
 router.get('/:id', jobController.getJob);
 
-// POST a new job
 router.post('/', validateJobInput, jobController.createJob);
 
-// PUT update a job
-router.put('/:id', jobController.updateJob);
+router.put('/:id', validateJobInput, jobController.updateJob);
 
-// DELETE a job
 router.delete('/:id', jobController.deleteJob);
 
 export default router;
