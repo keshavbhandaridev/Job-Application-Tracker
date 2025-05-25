@@ -5,6 +5,8 @@ import path from 'path';
 import config from '../config/config';
 import { errorHandler } from './middleware/errorHandler';
 import { seedRoles } from '../config/jobRoles';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '../config/swagger';
 
 // Import API versions
 import v1Routes from './routes/v1';
@@ -27,6 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 // Static folder
 app.use(express.static(path.join(__dirname, '../public')));
 
+// Swagger API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // API Routes - Version 1
 app.use('/api/v1', v1Routes);
 
@@ -41,4 +46,5 @@ app.use(errorHandler);
 // Start server
 app.listen(PORT, () => {
   console.info(`Server running in ${config.env} mode on port ${PORT}`);
+  console.info(`API Documentation available at http://localhost:${PORT}/api-docs`);
 });
