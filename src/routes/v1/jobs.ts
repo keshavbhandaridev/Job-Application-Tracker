@@ -3,8 +3,12 @@ import * as jobController from '../../controllers/jobController';
 import { protect } from '../../middleware/authMiddleware';
 import { createJobValidation, updateJobValidation } from '../../middleware/validators/jobValidator';
 import validationHandler from '../../middleware/validators/validationHandler';
+import { jobsLimiter } from '../../middleware/rateLimit/rateLimiter';
 
 const router: Router = express.Router();
+
+// Apply jobs rate limiter to all job routes
+router.use(jobsLimiter);
 
 // All routes require authentication
 router.use(protect);

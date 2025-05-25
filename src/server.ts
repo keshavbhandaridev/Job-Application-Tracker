@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { seedRoles } from '../config/jobRoles';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../config/swagger';
+import { globalLimiter } from './middleware/rateLimit/rateLimiter';
 
 // Import API versions
 import v1Routes from './routes/v1';
@@ -25,6 +26,9 @@ const PORT = config.port;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Apply global rate limiter to all requests
+app.use(globalLimiter);
 
 // Static folder
 app.use(express.static(path.join(__dirname, '../public')));
