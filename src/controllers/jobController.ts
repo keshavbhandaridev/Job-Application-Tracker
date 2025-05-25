@@ -1,18 +1,25 @@
 import { Request, Response } from 'express';
 import Job from '../models/Job';
 
-// Get all job applications
 export const getJobs = async (req: Request, res: Response): Promise<void> => {
   try {
-    const jobs = await Job.find().sort({ applicationDate: -1 });
-    res.status(200).json(jobs);
+    const jobs = await Job.find({ user: req.user?._id });
+
+    res.status(200).json({
+      success: true,
+      count: jobs.length,
+      data: jobs,
+    });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ message: 'Error fetching jobs', error: errorMessage });
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching jobs',
+      error: errorMessage,
+    });
   }
 };
 
-// Get a single job application
 export const getJob = async (req: Request, res: Response): Promise<void> => {
   try {
     const job = await Job.findById(req.params.id);
@@ -27,19 +34,27 @@ export const getJob = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Create a new job application
 export const createJob = async (req: Request, res: Response): Promise<void> => {
   try {
+    req.body.user = req.user?._id;
+
     const newJob = new Job(req.body);
     const savedJob = await newJob.save();
-    res.status(201).json(savedJob);
+
+    res.status(201).json({
+      success: true,
+      data: savedJob,
+    });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    res.status(400).json({ message: 'Error creating job application', error: errorMessage });
+    res.status(400).json({
+      success: false,
+      message: 'Error creating job application',
+      error: errorMessage,
+    });
   }
 };
 
-// Update a job application
 export const updateJob = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedJob = await Job.findByIdAndUpdate(req.params.id, req.body, {
@@ -57,7 +72,6 @@ export const updateJob = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// Delete a job application
 export const deleteJob = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedJob = await Job.findByIdAndDelete(req.params.id);
