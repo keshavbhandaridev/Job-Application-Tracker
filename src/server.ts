@@ -4,7 +4,6 @@ import connectDB from '../config/db';
 import path from 'path';
 import config from '../config/config';
 import { errorHandler } from './middleware/errorHandler';
-import { seedRoles } from '../config/jobRoles';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from '../config/swagger';
 import { globalLimiter } from './middleware/rateLimit/rateLimiter';
@@ -14,9 +13,6 @@ import v1Routes from './routes/v1';
 
 // Connect to database
 connectDB();
-
-// Seed job roles if they don't exist
-seedRoles();
 
 // Initialize Express app
 const app: Express = express();

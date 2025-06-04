@@ -12,7 +12,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"config/**/*.ts\"",
     "check-format": "prettier --check \"src/**/*.ts\" \"config/**/*.ts\"",
     "check": "npm run lint && npm run check-format",
-    "seed:regions": "ts-node scripts/seedRegions.ts"
+    "seed:regions": "ts-node scripts/seedRegions.ts",
+    "seed:roles": "ts-node scripts/seedRoles.ts"
   },
   "keywords": [],
   "author": "",

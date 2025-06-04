@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import Role from '../src/models/Role';
-import config from './config';
-
-const jobRoles = [
+/**
+ * A comprehensive list of job roles for the application
+ * This list is used by the role seeding script
+ */
+export const jobRoles = [
   'Frontend Developer',
   'Backend Developer',
   'Full Stack Developer',
@@ -207,27 +207,3 @@ const jobRoles = [
   'Freelancer Designer',
   'Independent Consultant',
 ];
-
-/**
- * Seeds job roles into the database if they don't already exist
- * This function connects to the database, checks if roles exist,
- * and adds them if the collection is empty
- */
-export const seedRoles = async (): Promise<void> => {
-  try {
-    await mongoose.connect(config.mongoUri);
-    const existing = await Role.find();
-    console.info(`Found ${existing.length} existing roles`);
-
-    if (existing.length === 0) {
-      await Role.insertMany(jobRoles.map(name => ({ name })));
-      console.info('✅ Roles seeded successfully');
-    } else {
-      console.info('ℹ️ Roles already exist');
-    }
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    console.error(`❌ Error seeding roles: ${errorMessage}`);
-    process.exit(1);
-  }
-};
